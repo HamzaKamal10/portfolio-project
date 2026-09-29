@@ -1,24 +1,19 @@
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
-
-class Experience extends Model
+protected function casts(): array
 {
-    protected $fillable = [
-        'company_ar', 'company_en', 
-        'position_ar', 'position_en', 
-        'start_date', 'end_date', 
-        'description_ar', 'description_en'
-    ];
+return [
+'start_date' => 'date',
+'end_date' => 'date',
+'is_current' => 'boolean',
+'sort_order' => 'integer',
+'is_visible' => 'boolean',
+];
+}
 
-    // 
-    protected function casts(): array
-    {
-        return [
-            'start_date' => 'date',
-            'end_date' => 'date',
-        ];
-    }
+public function localized(string $field): ?string
+{
+$locale = app()->getLocale();
+
+return $this->{$field . '_' . $locale}
+?? $this->{$field . '_en'}
+?? $this->{$field . '_ar'};
 }

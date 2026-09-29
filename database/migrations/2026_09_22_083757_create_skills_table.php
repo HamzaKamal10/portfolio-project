@@ -10,16 +10,18 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('skills', function (Blueprint $table) {
-        $table->id();
-        $table->string('name_ar');
-        $table->string('name_en');
-        $table->integer('percentage')->default(100); 
-        $table->string('color')->nullable(); //     
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('skills', function (Blueprint $table) {
+            $table->id();
+            $table->string('name_ar');
+            $table->string('name_en');
+            $table->string('category')->nullable();
+            $table->integer('proficiency')->nullable();
+            $table->integer('sort_order')->default(0);
+            $table->boolean('is_visible')->default(true);
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

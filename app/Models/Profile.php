@@ -1,0 +1,17 @@
+protected $fillable = [
+'name_ar',
+'name_en',
+'headline_ar',
+'headline_en',
+'bio_ar',
+'bio_en',
+'email',
+'phone',
+'location_ar',
+'location_en',
+'avatar',
+'resume_file',
+'linkedin_url',
+'github_url',
+'website_url',
+];

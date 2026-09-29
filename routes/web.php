@@ -1,20 +1,50 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProjectShowController;
+use App\Livewire\Admin\EducationManager;
+use App\Livewire\Admin\ExperienceManager;
+use App\Livewire\Admin\ProfileEditor;
+use App\Livewire\Admin\ProjectsManager;
+use App\Livewire\Admin\SkillsManager;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/language/{locale}', function (Request $request, string $locale) {
+    abort_unless(in_array($locale, ['ar', 'en'], true), 404);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+    $request->session()->put('locale', $locale);
 
-require __DIR__.'/auth.php';
+    return redirect()->back();
+})->name('language.switch');
+
+
+Route::prefix('{locale}')
+    ->whereIn('locale', ['ar', 'en'])
+    ->middleware('locale')
+    ->group(function (): void {
+        Route::get('/', HomeController::class)->name('home');
+
+        Route::view('/projects', 'projects.index')->name('projects.index');
+
+        Route::get('/projects/{project:slug}', ProjectShowController::class)
+            ->name('projects.show');
+    });
+
+
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function (): void {
+        Route::view('/', 'admin.dashboard')->name('dashboard');
+
+        Route::get('/projects', ProjectsManager::class)->name('projects');
+        Route::get('/skills', SkillsManager::class)->name('skills');
+        Route::get('/experience', ExperienceManager::class)->name('experience');
+        Route::get('/education', EducationManager::class)->name('education');
+        Route::get('/profile', ProfileEditor::class)->name('profile');
+    });
+
+require __DIR__ . '/auth.php';
+

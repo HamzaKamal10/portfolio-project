@@ -1,22 +1,18 @@
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
-
-class Education extends Model
+protected function casts(): array
 {
-    protected $fillable = [
-        'institution_ar', 'institution_en', 
-        'degree_ar', 'degree_en', 
-        'start_date', 'end_date'
-    ];
+return [
+'start_date' => 'date',
+'end_date' => 'date',
+'sort_order' => 'integer',
+'is_visible' => 'boolean',
+];
+}
 
-    protected function casts(): array
-    {
-        return [
-            'start_date' => 'date',
-            'end_date' => 'date',
-        ];
-    }
+public function localized(string $field): ?string
+{
+$locale = app()->getLocale();
+
+return $this->{$field . '_' . $locale}
+?? $this->{$field . '_en'}
+?? $this->{$field . '_ar'};
 }
