@@ -10,6 +10,10 @@ use App\Livewire\Admin\SkillsManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// التعديل المضاف هنا لتوجيه الرابط الرئيسي تلقائياً للغة العربية
+Route::get('/', function () {
+    return redirect('/ar');
+});
 
 Route::get('/language/{locale}', function (Request $request, string $locale) {
     abort_unless(in_array($locale, ['ar', 'en'], true), 404);
@@ -47,4 +51,3 @@ Route::middleware(['auth', 'admin'])
     });
 
 require __DIR__ . '/auth.php';
-

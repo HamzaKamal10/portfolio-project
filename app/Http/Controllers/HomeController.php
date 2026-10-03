@@ -12,8 +12,14 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
+        $profile = Profile::query()->first();
+
+        if (! $profile) {
+            abort(503, 'Portfolio is being set up. Please check back soon.');
+        }
+
         return view('home', [
-            'profile' => Profile::query()->firstOrFail(),
+            'profile' => $profile,
             'skills' => Skill::query()->visible()->ordered()->get(),
             'experiences' => Experience::query()->visible()->ordered()->get(),
             'educations' => Education::query()->visible()->ordered()->get(),
